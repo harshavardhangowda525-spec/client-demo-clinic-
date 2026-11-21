@@ -32,8 +32,10 @@ export function redirectUri() {
   return `${base}/api/admin/google/callback`;
 }
 
-export function buildAuthUrl(state: string) {
+export function buildAuthUrl(state: string, loginHint?: string | null) {
   const p = new URLSearchParams({
+    // Pre-selects the clinic's Google account on Google's sign-in screen.
+    ...(loginHint ? { login_hint: loginHint } : {}),
     client_id: process.env.GOOGLE_CLIENT_ID!,
     redirect_uri: redirectUri(),
     response_type: "code",

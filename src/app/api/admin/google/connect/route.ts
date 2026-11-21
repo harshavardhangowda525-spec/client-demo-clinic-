@@ -16,5 +16,7 @@ export async function GET(req: Request) {
   (await cookies()).set("g_oauth_state", `${state}.${admin.id}`, {
     httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/api/admin/google", maxAge: 600,
   });
-  return NextResponse.redirect(buildAuthUrl(state));
+  const hint = new URL(req.url).searchParams.get("login_hint")?.trim().toLowerCase() ?? "";
+  const loginHint = /^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,}$/.test(hint) ? hint : null;
+  return NextResponse.redirect(buildAuthUrl(state, loginHint));
 }

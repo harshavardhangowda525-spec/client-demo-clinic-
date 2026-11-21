@@ -231,7 +231,11 @@ function CalendarIntegration({ cal, result, includeName, onIncludeName, save, pe
           </div>
           <div className="flex flex-wrap gap-2">
             {cal.configured ? (
-              <Button asChild variant={connected ? "outline" : "primary"}><a href="/api/admin/google/connect"><Link2 /> {connected || cal.status === "error" ? "Reconnect" : "Connect Google Calendar"}</a></Button>
+              <form action="/api/admin/google/connect" method="get" className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+                <Input name="login_hint" type="email" aria-label="Clinic Google account email" placeholder="clinic@gmail.com"
+                  defaultValue={cal.google_email ?? ""} className="h-11 sm:w-64" />
+                <Button type="submit" variant={connected ? "outline" : "primary"}><Link2 /> {connected || cal.status === "error" ? "Reconnect" : "Connect Google Calendar"}</Button>
+              </form>
             ) : (
               <Button disabled title="Server credentials missing"><Link2 /> Connect Google Calendar</Button>
             )}
@@ -278,7 +282,7 @@ function CalendarIntegration({ cal, result, includeName, onIncludeName, save, pe
           <li>In Google Cloud Console, enable the <b>Google Calendar API</b> and configure the OAuth consent screen.</li>
           <li>Create an OAuth client ID (type: Web application) with this authorised redirect URI:<br /><code className="mt-1 inline-block break-all rounded bg-cream px-2 py-1 text-xs">{cal.redirectUri}</code></li>
           <li>Set <code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_CLIENT_SECRET</code> in the hosting environment and redeploy.</li>
-          <li>Return here and click <b>Connect Google Calendar</b>.</li>
+          <li>Return here, enter the clinic&apos;s Google account email and click <b>Connect Google Calendar</b>. Google opens with that account selected; the clinic signs in and clicks <b>Allow</b>.</li>
         </ol>
         <p className="mt-3 text-xs text-muted">Server credentials: {cal.configured ? "present" : "not configured"}.</p>
       </Card>
